@@ -6,6 +6,13 @@ import { ref, computed } from 'vue'
 const memo = ref(''
 )
 
+function isEmpty(a) {
+    if (a == '') {
+        return true;
+    }
+        return false
+}
+
 defineProps({
     title: String
 });
@@ -17,9 +24,11 @@ defineProps({
             <PlusSvg />新しいメモ
         </h1>
         <textarea
+            v-model="memo"
             rows="5"
             placeholder="メモを入力してください..."/>
-        <button class="savebutton">
+<!--        <p>isEmpty結果: {{ isEmpty(memo) }}</p>-->
+        <button :disabled = "isEmpty(memo)" class="savebutton">
             <PlusSvg />メモを保存
         </button>
     </div>
@@ -68,6 +77,12 @@ textarea {
     color: white;
     cursor: pointer;
     background: linear-gradient(to right, #FDBA74, #F87171);
+}
+
+.savebutton:disabled {
+    background: linear-gradient(to right, #D1D5DB, #9CA3AF);
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 </style>
