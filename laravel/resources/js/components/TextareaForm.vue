@@ -6,6 +6,20 @@ import { ref, computed } from 'vue'
 const memo = ref(''
 )
 
+async function saveMemo() {
+    const response = await fetch('/api/memos', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''},
+        body: JSON.stringify({ content: memo.value })
+    })
+
+    if (response.ok) {
+        memo.value = ''
+    }
+}
+
 function isEmpty(a) {
     if (a == '') {
         return true;
@@ -28,7 +42,7 @@ defineProps({
             rows="5"
             placeholder="メモを入力してください..."/>
 <!--        <p>isEmpty結果: {{ isEmpty(memo) }}</p>-->
-        <button :disabled = "isEmpty(memo)" class="savebutton">
+        <button @click="saveMemo" :disabled="isEmpty(memo)" class="savebutton">
             <PlusSvg />メモを保存
         </button>
     </div>
