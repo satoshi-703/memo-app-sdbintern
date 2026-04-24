@@ -1,18 +1,31 @@
 <script setup lang="ts">
 import PlusSvg from "../components/svgs/PlusSvg.vue"
-import Header from "@/components/Header.vue";
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 const memo = ref(''
 )
 
+// csrf
+
 async function saveMemo() {
+    const metaTag = document.querySelector('meta[name="csrf-token"]');
+
+    let csrfToken = '';
+
+    if (metaTag) {
+        csrfToken = metaTag.getAttribute('content') || '';
+    }
+
+    const data = {
+        content: memo.value
+    };
+
     const response = await fetch('/api/memos', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''},
-        body: JSON.stringify({ content: memo.value })
+            'X-CSRF-TOKEN': csrfToken},
+        body: JSON.stringify(data)
     })
 
     if (response.ok) {
@@ -21,10 +34,7 @@ async function saveMemo() {
 }
 
 function isEmpty(a) {
-    if (a == '') {
-        return true;
-    }
-        return false
+    return a === '';
 }
 
 defineProps({
