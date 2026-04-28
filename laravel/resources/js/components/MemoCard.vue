@@ -8,7 +8,7 @@ const MemoData  = ref(null)
 
 const memoCount = computed(() => {
     if (!MemoData.value) return 0
-    return MemoData.value.filter((t) => t.deleted === false).length
+    return MemoData.value.filter((t) => t.deleted === 0).length
 })
 
 async function fetchData() {
@@ -25,9 +25,27 @@ async function deletedMemo(id: number) {
     alert('削除ボタンが押されました（ID: ' + id + '）');
 }
 
+const formatDate = (dateString: string) => {
+    if (!dateString) return ''
+
+    const date = new Date(dateString);
+
+    return date.toLocaleString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+}
+
 onMounted(() => {
     fetchData()
 })
+
+defineExpose({
+    fetchData
+});
 
 </script>
 
@@ -39,14 +57,12 @@ onMounted(() => {
                 {{memoCount}}件
             </div>
         </div>
-
-
             <ul v-if="MemoData">
-<!--                <TextareaForm @response="fetchData" />-->
+
                 <li v-for="memo in MemoData" :key="memo.id">
                     <div class="card">
                         <p>{{memo.content}}</p>
-                        <p>{{memo.created_at}}</p>
+                        <p>{{ formatDate(memo.created_at)}}</p>
                         <button class="deleted-btn" @click="deletedMemo(memo.id)">
                             <TrashSvg />
                         </button>

@@ -9,25 +9,25 @@ class MemoController extends Controller
 {
     public function index() {
 
-//        $memos = Memo::all();
-//        return response()->json($memos);
+        $memos = Memo::latest()->get();
+        return response()->json($memos);
 
-        $mockData = [
-            [
-                'id' => 1,
-                'content' => 'これはmockデータだよーん',
-                'created_at' => '2020-01-01 10:00:00',
-                'deleted' => false
-            ],
-            [
-                'id' => 2,
-                'content' => 'メモアプリ作成頑張るのだ！！',
-                'created_at' => '2022-01-01 10:00:00',
-                'deleted' => false
-            ]
-        ];
-
-        return response()->json($mockData);
+//        $mockData = [
+//            [
+//                'id' => 1,
+//                'content' => 'これはmockデータだよーん',
+//                'created_at' => '2020-01-01 10:00:00',
+//                'deleted' => false
+//            ],
+//            [
+//                'id' => 2,
+//                'content' => 'メモアプリ作成頑張るのだ！！',
+//                'created_at' => '2022-01-01 10:00:00',
+//                'deleted' => false
+//            ]
+//        ];
+//
+//        return response()->json($mockData);
 
     }
 
@@ -39,3 +39,4 @@ class MemoController extends Controller
 //        201は成功を意味するHTTPステータスコード
     }
 }
+
