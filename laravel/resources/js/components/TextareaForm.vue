@@ -5,6 +5,8 @@ import { ref } from 'vue'
 const memo = ref(''
 )
 
+const emit = defineEmits(['response']);
+
 // csrf
 
 async function saveMemo() {
@@ -30,6 +32,7 @@ async function saveMemo() {
 
     if (response.ok) {
         memo.value = ''
+        emit('response', 'stored');
     }
 }
 
