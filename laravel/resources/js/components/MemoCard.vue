@@ -53,7 +53,9 @@ const formatDate = (dateString: string) => {
         <div class="title">
             <DocumentSvg />保存されたメモ
             <div class="number">
-                {{memoCount}}件
+                <span class="px-3 py-1 rounded-full bg-primary-100 text-gray-600 text-sm border border-primary-200 shadow-sm">
+                    {{memoCount}}件
+                </span>
             </div>
         </div>
             <ul v-if="MemoData">
