@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import DocumentSvg  from "@/components/svgs/DocumentSvg.vue";
-import TextareaForm from "@/components/TextareaForm.vue";
-import { ref, onMounted,computed } from 'vue'
+import { ref, computed } from 'vue'
 import TrashSvg from "@/components/svgs/TrashSvg.vue";
 
-const MemoData  = ref(null)
+const MemoData  = ref([])
+
+const displayMemos = computed(() => {
+    if (!MemoData.value) return 0
+    return MemoData.value.filter((memo) => memo.deleted === 0)
+})
 
 const memoCount = computed(() => {
     if (!MemoData.value) return 0
@@ -12,7 +16,7 @@ const memoCount = computed(() => {
 })
 
 async function fetchData() {
-    MemoData.value = null
+    // MemoData.value = []
     const res = await fetch(
         'http://localhost:48080/api/memos/')
     MemoData.value = await res.json()
@@ -20,9 +24,8 @@ async function fetchData() {
 
 // script setup内に追加
 async function deletedMemo(id: number) {
-    console.log('削除するID:', id);
-    // 本来はここで fetch(url, { method: 'DELETE' }) を呼ぶ
-    alert('削除ボタンが押されました（ID: ' + id + '）');
+    const response = await fetch(`http://localhost:48080/api/memos/${id}`,{method: 'PATCH',body: JSON.stringify({ deleted: 1 })});
+    await fetchData();
 }
 
 const formatDate = (dateString: string) => {
@@ -39,13 +42,9 @@ const formatDate = (dateString: string) => {
     });
 }
 
-onMounted(() => {
-    fetchData()
-})
-
-defineExpose({
-    fetchData
-});
+ defineExpose({
+     fetchData
+ });
 
 </script>
 
@@ -59,7 +58,7 @@ defineExpose({
         </div>
             <ul v-if="MemoData">
 
-                <li v-for="memo in MemoData" :key="memo.id">
+                <li v-for="memo in displayMemos" :key="memo.id">
                     <div class="card">
                         <p>{{memo.content}}</p>
                         <p>{{ formatDate(memo.created_at)}}</p>

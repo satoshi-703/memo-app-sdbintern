@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Memo extends Model
 {
-    protected $fillable = ['content'];
+    protected $fillable = ['content', 'deleted'];
     protected $casts = [
         'created_at' => 'datetime',
     ];
