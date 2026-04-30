@@ -53,8 +53,8 @@ defineProps({
         <textarea
             v-model="memo"
             rows="5"
+            @keydown.enter.prevent="saveMemo"
             placeholder="メモを入力してください..."/>
-<!--        <p>isEmpty結果: {{ isEmpty(memo) }}</p>-->
         <button @click="saveMemo" :disabled="isEmpty(memo)" class="savebutton">
             <PlusSvg />メモを保存
         </button>
