@@ -7,6 +7,10 @@ const memo = ref(''
 
 const emit = defineEmits(['response']);
 
+defineProps({
+    title: String
+});
+
 // csrf
 
 async function saveMemo() {
@@ -40,9 +44,7 @@ function isEmpty(a) {
     return a === '';
 }
 
-defineProps({
-    title: String
-});
+
 </script>
 
 <template>
@@ -53,7 +55,7 @@ defineProps({
         <textarea
             v-model="memo"
             rows="5"
-            @keydown.enter.prevent="saveMemo"
+            @keydown.enter.exact.prevent="saveMemo"
             placeholder="メモを入力してください..."/>
         <button @click="saveMemo" :disabled="isEmpty(memo)" class="savebutton">
             <PlusSvg />メモを保存
