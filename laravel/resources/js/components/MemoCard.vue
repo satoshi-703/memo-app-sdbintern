@@ -62,7 +62,7 @@ const formatDate = (dateString: string) => {
 
                 <li v-for="memo in displayMemos" :key="memo.id">
                     <div class="card">
-                        <p>{{memo.content}}</p>
+                        <p style="white-space: pre-wrap;">{{memo.content}}</p>
                         <p>{{ formatDate(memo.created_at)}}</p>
                         <button class="deleted-btn" @click="deletedMemo(memo.id)">
                             <TrashSvg />
