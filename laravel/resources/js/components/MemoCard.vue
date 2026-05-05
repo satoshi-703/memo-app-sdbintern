@@ -2,8 +2,12 @@
 import DocumentSvg  from "@/components/svgs/DocumentSvg.vue";
 import { ref, computed } from 'vue'
 import TrashSvg from "@/components/svgs/TrashSvg.vue";
+import editSvg from "@/components/svgs/editSvg.vue";
+import EditModal from "@/components/EditModal.vue";
 
 const MemoData  = ref([])
+const isModalOpen = ref(false);
+const targetMemo = ref<any>(null);
 
 const displayMemos = computed(() => {
     if (!MemoData.value) return 0
@@ -15,16 +19,31 @@ const memoCount = computed(() => {
     return MemoData.value.filter((t) => t.deleted === 0).length
 })
 
+const editMemo = (memo: any) => {
+    targetMemo.value = memo;
+    isModalOpen.value = true;
+};
+
 async function fetchData() {
-    // MemoData.value = []
     const res = await fetch(
         'http://localhost:48080/api/memos/')
     MemoData.value = await res.json()
 }
 
-// script setup内に追加
+
+
 async function deletedMemo(id: number) {
-    const response = await fetch(`http://localhost:48080/api/memos/${id}`,{method: 'PATCH',body: JSON.stringify({ deleted: 1 })});
+
+    const metaTag = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = metaTag?.getAttribute('content') || '';
+
+    const response = await fetch(`http://localhost:48080/api/memos/${id}`,{
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({ deleted: 1 })});
     await fetchData();
 }
 
@@ -64,14 +83,25 @@ const formatDate = (dateString: string) => {
                     <div class="card">
                         <p style="white-space: pre-wrap;">{{memo.content}}</p>
                         <p>{{ formatDate(memo.created_at)}}</p>
-                        <button class="deleted-btn" @click="deletedMemo(memo.id)">
-                            <TrashSvg />
-                        </button>
+
+                        <div class="card-actions">
+                            <button class="edit-btn" @click="editMemo(memo)">
+                                <editSvg />
+                            </button>
+                            <button class="deleted-btn" @click="deletedMemo(memo.id)">
+                                <TrashSvg />
+                            </button>
+                        </div>
                     </div>
                 </li>
             </ul>
 
-
+            <EditModal
+                :is-open="isModalOpen"
+                :memo-data="targetMemo"
+                @close="isModalOpen = false"
+                @updated="fetchData"
+            />
     </div>
 </template>
 
@@ -107,17 +137,29 @@ const formatDate = (dateString: string) => {
     margin: 0 auto 10px auto;
 }
 
-.deleted-btn {
+.card-actions {
     position: absolute;
     top: 20px;
     right: 20px;
+    display: flex;
+    gap: 8px;
     opacity: 0;
-    color: black;
     transition: opacity 0.2s;
-    cursor: pointer;
 }
 
-.card:hover .deleted-btn {
+.edit-btn, .deleted-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    transition: transform 0.1s;
+}
+
+.card:hover .card-actions {
     opacity: 1;
 }
 
