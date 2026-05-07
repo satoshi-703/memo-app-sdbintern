@@ -38,13 +38,14 @@ async function deletedMemo(id: number) {
     const csrfToken = metaTag?.getAttribute('content') || '';
 
     const response = await fetch(`http://localhost:48080/api/memos/${id}`,{
-        method: 'PATCH',
+        method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
-        },
-        body: JSON.stringify({ deleted: 1 })});
-    await fetchData();
+        }});
+
+    if (response.ok) {
+        await fetchData();
+    }
 }
 
 const formatDate = (dateString: string) => {

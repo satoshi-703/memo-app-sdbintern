@@ -42,12 +42,6 @@ class MemoController extends Controller
     public function updata(Request $request, $id) {
         $memo = Memo::findOrFail($id);
 
-
-
-        if ($request->has('deleted')) {
-            $memo->deleted = $request->input('deleted');
-        }
-
         if ($request->has('content')) {
             $memo->content = $request->input('content');
         }
@@ -56,6 +50,15 @@ class MemoController extends Controller
 
         return response()->json(['message' => '更新完了']);
 
+    }
+
+    public function destroy($id) {
+        $memo = Memo::findOrFail($id);
+
+        $memo->deleted = 1;
+        $memo->save();
+
+        return response()->json(['message' => '更新完了']);
     }
 }
 

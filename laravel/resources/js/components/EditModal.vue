@@ -41,7 +41,7 @@ async function updateMemo() {
     <div v-if="isOpen" class="modal-overlay" @click.self="$emit('close')">
         <div class="modal-card">
             <h2>メモを編集</h2>
-            <textarea v-model="editedContent" rows="5"></textarea>
+            <textarea v-model="editedContent" rows="5" @keydown.enter.exact.prevent="updateMemo"></textarea>
             <div class="modal-buttons">
                 <button @click="updateMemo" class="savebutton">更新する</button>
                 <button @click="$emit('close')" class="cancel-btn">キャンセル</button>
@@ -58,6 +58,8 @@ textarea {
     padding: 8px;
     font-size: 0.9rem;
     resize: none;
+    margin-top: 10px;
+    margin-bottom: 16px;
 }
 
 .modal-overlay {
@@ -74,9 +76,8 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     border: none;
     font-size: 1.0rem;
     font-weight: bold;
