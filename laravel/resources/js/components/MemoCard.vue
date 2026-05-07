@@ -4,10 +4,12 @@ import { ref, computed } from 'vue'
 import TrashSvg from "@/components/svgs/TrashSvg.vue";
 import editSvg from "@/components/svgs/editSvg.vue";
 import EditModal from "@/components/EditModal.vue";
+import RestorationModal from "@/components/RestorationModal.vue";
 
 const MemoData  = ref([])
 const isModalOpen = ref(false);
 const targetMemo = ref<any>(null);
+const isRestoreModalOpen = ref(false);
 
 const displayMemos = computed(() => {
     if (!MemoData.value) return 0
@@ -73,6 +75,17 @@ const formatDate = (dateString: string) => {
         <div class="title">
             <DocumentSvg />保存されたメモ
             <div class="number">
+                <button
+                    @click="isRestoreModalOpen = true"
+                    class="trash-bin-btn"
+                    title="ゴミ箱を見る"
+                >
+                    <p class="flex items-center gap-2 text-gray-700">
+                        <TrashSvg class="w-5 h-5 text-gray-500" />
+                        <span class="whitespace-nowrap">削除されたメモ</span>
+                    </p>
+
+                </button>
                 <span class="px-3 py-1 rounded-full bg-primary-100 text-gray-600 text-sm border border-primary-200 shadow-sm">
                     {{memoCount}}件
                 </span>
@@ -96,6 +109,13 @@ const formatDate = (dateString: string) => {
                     </div>
                 </li>
             </ul>
+
+            <RestorationModal
+                :is-open="isRestoreModalOpen"
+                :memos="MemoData"
+                @close="isRestoreModalOpen = false"
+                @updated="fetchData"
+            />
 
             <EditModal
                 :is-open="isModalOpen"
@@ -123,6 +143,7 @@ const formatDate = (dateString: string) => {
     font-size: 20px;
     display: flex;
     margin-left: auto;
+    gap: 12px;
 }
 
 .card {

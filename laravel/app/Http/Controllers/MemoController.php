@@ -36,7 +36,6 @@ class MemoController extends Controller
             'content' => $request->content,
         ]);
         return response()->json($memo, 201);
-//        201は成功を意味するHTTPステータスコード
     }
 
     public function updata(Request $request, $id) {
@@ -59,6 +58,15 @@ class MemoController extends Controller
         $memo->save();
 
         return response()->json(['message' => '更新完了']);
+    }
+
+    public function restore($id) {
+        $memo = Memo::findorFail($id);
+
+        $memo->deleted = 0;
+        $memo->save();
+
+        return response()->json(['message' => '復元完了']);
     }
 }
 
