@@ -11,7 +11,6 @@ defineProps({
     title: String
 });
 
-// csrf
 
 async function saveMemo() {
     const metaTag = document.querySelector('meta[name="csrf-token"]');
@@ -56,7 +55,8 @@ function isEmpty(a) {
             v-model="memo"
             rows="5"
             @keydown.enter.exact.prevent="saveMemo"
-            placeholder="メモを入力してください..."/>
+            placeholder="メモを入力してください...Enterで保存,
+shift + Enterで改行"/>
         <button @click="saveMemo" :disabled="isEmpty(memo)" class="savebutton">
             ＋ メモを保存
         </button>
@@ -88,7 +88,6 @@ textarea {
 .title {
     display: flex;
     justify-content: flex-start;
-    //align-items: center;
     gap: 8px;
     font-size: 1.2rem;
 }
