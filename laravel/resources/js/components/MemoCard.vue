@@ -6,19 +6,26 @@ import editSvg from "@/components/svgs/editSvg.vue";
 import EditModal from "@/components/EditModal.vue";
 import RestorationModal from "@/components/RestorationModal.vue";
 
-const MemoData  = ref([])
+// const MemoData  = ref([])
 const isModalOpen = ref(false);
 const targetMemo = ref<any>(null);
 const isRestoreModalOpen = ref(false);
 
+const props = defineProps({
+    memos: {
+        type: Array,
+        default: () => []
+    }
+})
+
+const emit = defineEmits(['updated']);
+
 const displayMemos = computed(() => {
-    if (!MemoData.value) return 0
-    return MemoData.value.filter((memo) => memo.deleted === 0)
+    return props.memos.filter((memo) => memo.deleted === 0)
 })
 
 const memoCount = computed(() => {
-    if (!MemoData.value) return 0
-    return MemoData.value.filter((t) => t.deleted === 0).length
+    return props.memos.filter((t) => t.deleted === 0).length
 })
 
 const editMemo = (memo: any) => {
@@ -26,11 +33,11 @@ const editMemo = (memo: any) => {
     isModalOpen.value = true;
 };
 
-async function fetchData() {
-    const res = await fetch(
-        'http://localhost:48080/api/memos/')
-    MemoData.value = await res.json()
-}
+// async function fetchData() {
+//     const res = await fetch(
+//         'http://localhost:48080/api/memos/')
+//     MemoData.value = await res.json()
+// }
 
 
 
@@ -46,7 +53,7 @@ async function deletedMemo(id: number) {
         }});
 
     if (response.ok) {
-        await fetchData();
+        emit('updated');
     }
 }
 
@@ -64,9 +71,9 @@ const formatDate = (dateString: string) => {
     });
 }
 
- defineExpose({
-     fetchData
- });
+ // defineExpose({
+ //     fetchData
+ // });
 
 </script>
 
@@ -91,12 +98,12 @@ const formatDate = (dateString: string) => {
                 </span>
             </div>
         </div>
-            <ul v-if="MemoData">
+            <ul v-if="memos.length">
 
                 <li v-for="memo in displayMemos" :key="memo.id">
                     <div class="card">
                         <p style="white-space: pre-wrap;">{{memo.content}}</p>
-                        <p>{{ formatDate(memo.created_at)}}</p>
+                        <p class="text-sm text-gray-400">{{ formatDate(memo.created_at)}}</p>
 
                         <div class="card-actions">
                             <button class="edit-btn" @click="editMemo(memo)">
@@ -112,16 +119,16 @@ const formatDate = (dateString: string) => {
 
             <RestorationModal
                 :is-open="isRestoreModalOpen"
-                :memos="MemoData"
+                :memos="memos"
                 @close="isRestoreModalOpen = false"
-                @updated="fetchData"
+                @updated="emit('updated')"
             />
 
             <EditModal
                 :is-open="isModalOpen"
                 :memo-data="targetMemo"
                 @close="isModalOpen = false"
-                @updated="fetchData"
+                @updated="emit('updated')"
             />
     </div>
 </template>
