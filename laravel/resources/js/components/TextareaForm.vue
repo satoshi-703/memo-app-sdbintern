@@ -58,7 +58,7 @@ function isEmpty(a) {
             @keydown.enter.exact.prevent="saveMemo"
             placeholder="メモを入力してください..."/>
         <button @click="saveMemo" :disabled="isEmpty(memo)" class="savebutton">
-            <PlusSvg />メモを保存
+            ＋ メモを保存
         </button>
     </div>
 </template>
