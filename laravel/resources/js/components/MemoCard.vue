@@ -6,7 +6,6 @@ import editSvg from "@/components/svgs/editSvg.vue";
 import EditModal from "@/components/EditModal.vue";
 import RestorationModal from "@/components/RestorationModal.vue";
 
-// const MemoData  = ref([])
 const isModalOpen = ref(false);
 const targetMemo = ref<any>(null);
 const isRestoreModalOpen = ref(false);
@@ -33,11 +32,6 @@ const editMemo = (memo: any) => {
     isModalOpen.value = true;
 };
 
-// async function fetchData() {
-//     const res = await fetch(
-//         'http://localhost:48080/api/memos/')
-//     MemoData.value = await res.json()
-// }
 
 
 
@@ -70,10 +64,6 @@ const formatDate = (dateString: string) => {
         minute: '2-digit',
     });
 }
-
- // defineExpose({
- //     fetchData
- // });
 
 </script>
 
@@ -143,7 +133,7 @@ const formatDate = (dateString: string) => {
     font-size: 20px;
     display: flex;
     justify-content: flex-start;
-    margin: 30px auto 10px auto;
+    margin: 0px auto 10px auto;
 }
 
 .number {
