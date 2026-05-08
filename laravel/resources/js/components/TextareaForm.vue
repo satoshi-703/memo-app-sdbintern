@@ -5,11 +5,11 @@ import { ref } from 'vue'
 const memo = ref(''
 )
 
-const emit = defineEmits(['response']);
-
 defineProps({
     title: String
 });
+
+const emit = defineEmits(['response']);
 
 
 async function saveMemo() {

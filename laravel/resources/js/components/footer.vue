@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// 特にロジックがなければ空でOK
 </script>
 
 <template>
