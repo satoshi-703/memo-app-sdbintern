@@ -7,19 +7,24 @@ use Illuminate\Http\Request;
 
 class MemoController extends Controller
 {
-    public function index(Request $request) {
-        $query = Memo::query();
+    public function index() {
 
-        $query->where('deleted', 0);
-
-        if($request->has('q') && !empty($request->q)) {
-            $keyword = $request->query('q');
-            $query->where('content', 'LIKE', "%{$keyword}%");
-        }
-        $memos = $query->latest()->get();
+        $memos = Memo::latest()->get();
         return response()->json($memos);
-
     }
+//    public function index(Request $request) {
+//        $query = Memo::query();
+//
+//        $query->where('deleted', 0);
+//
+//        if($request->has('q') && !empty($request->q)) {
+//            $keyword = $request->query('q');
+//            $query->where('content', 'LIKE', "%{$keyword}%");
+//        }
+//        $memos = $query->latest()->get();
+//        return response()->json($memos);
+//
+//    }
 
     public function store(Request $request) {
         $memo = Memo::create([
