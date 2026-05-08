@@ -7,27 +7,17 @@ use Illuminate\Http\Request;
 
 class MemoController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
+        $query = Memo::query();
 
-        $memos = Memo::latest()->get();
+        $query->where('deleted', 0);
+
+        if($request->has('q') && !empty($request->q)) {
+            $keyword = $request->query('q');
+            $query->where('content', 'LIKE', "%{$keyword}%");
+        }
+        $memos = $query->latest()->get();
         return response()->json($memos);
-
-//        $mockData = [
-//            [
-//                'id' => 1,
-//                'content' => 'これはmockデータだよーん',
-//                'created_at' => '2020-01-01 10:00:00',
-//                'deleted' => false
-//            ],
-//            [
-//                'id' => 2,
-//                'content' => 'メモアプリ作成頑張るのだ！！',
-//                'created_at' => '2022-01-01 10:00:00',
-//                'deleted' => false
-//            ]
-//        ];
-//
-//        return response()->json($mockData);
 
     }
 
