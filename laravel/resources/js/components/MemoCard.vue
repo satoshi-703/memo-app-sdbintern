@@ -9,6 +9,8 @@ import RestorationModal from "@/components/RestorationModal.vue";
 const isModalOpen = ref(false);
 const targetMemo = ref<any>(null);
 const isRestoreModalOpen = ref(false);
+const searchQuery = ref('');
+
 
 const props = defineProps({
     memos: {
@@ -20,8 +22,13 @@ const props = defineProps({
 const emit = defineEmits(['updated']);
 
 const displayMemos = computed(() => {
-    return props.memos.filter((memo) => memo.deleted === 0)
-})
+
+    return props.memos.filter((memo) => {
+        const isNotDeleted = memo.deleted === 0;
+        const matchesSearch = memo.content.toLowerCase().includes(searchQuery.value.toLowerCase());
+        return isNotDeleted && matchesSearch;
+    });
+});
 
 const memoCount = computed(() => {
     return props.memos.filter((t) => t.deleted === 0).length
@@ -71,6 +78,7 @@ const formatDate = (dateString: string) => {
     <div class="container">
         <div class="title">
             <DocumentSvg />保存されたメモ
+
             <div class="number">
                 <button
                     @click="isRestoreModalOpen = true"
@@ -88,6 +96,16 @@ const formatDate = (dateString: string) => {
                 </span>
             </div>
         </div>
+
+        <div class="search-bar">
+            <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="キーワードで検索..."
+                class="search-input"
+            />
+        </div>
+
             <ul v-if="memos.length">
 
                 <li v-for="memo in displayMemos" :key="memo.id">
@@ -133,7 +151,17 @@ const formatDate = (dateString: string) => {
     font-size: 20px;
     display: flex;
     justify-content: flex-start;
-    margin: 0px auto 10px auto;
+    margin: 30px auto 10px auto;
+}
+
+.search-bar {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 30px auto 30px auto;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .number {
